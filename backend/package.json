@@ -1,0 +1,28 @@
+{
+  "name": "campusconnect-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.0",
+    "multer": "^2.0.2",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
+    "stripe": "^20.4.1",
+    "tsx": "^4.21.0",
+    "vite": "^6.2.0",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
+
