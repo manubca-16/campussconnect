@@ -8,6 +8,28 @@ interface User {
   role: "student" | "college_admin" | "super_admin";
 }
 
+async function readJsonSafely(res: Response) {
+  const contentType = res.headers.get("content-type") || "";
+  const text = await res.text();
+
+  if (!text) return { data: null as any, raw: "" };
+
+  if (contentType.includes("application/json")) {
+    try {
+      return { data: JSON.parse(text), raw: text };
+    } catch {
+      return { data: null as any, raw: text };
+    }
+  }
+
+  // Try JSON anyway (some platforms mislabel content-type).
+  try {
+    return { data: JSON.parse(text), raw: text };
+  } catch {
+    return { data: null as any, raw: text };
+  }
+}
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -36,14 +58,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    const data = await res.json();
+    const { data, raw } = await readJsonSafely(res);
     if (res.ok) {
+      if (!data?.user) throw new Error("Login failed: invalid server response.");
       setUser(data.user);
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
       return data.user;
     } else {
-      throw new Error(data.message);
+      const message =
+        data?.message ||
+        (raw ? raw.slice(0, 200) : "") ||
+        `Login failed (HTTP ${res.status}). Check VITE_API_BASE_URL and backend status.`;
+      throw new Error(message);
     }
   };
 
@@ -53,8 +80,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message);
+    const { data, raw } = await readJsonSafely(res);
+    if (!res.ok) {
+      const message =
+        data?.message ||
+        (raw ? raw.slice(0, 200) : "") ||
+        `Registration failed (HTTP ${res.status}). Check VITE_API_BASE_URL and backend status.`;
+      throw new Error(message);
+    }
   };
 
   const logout = () => {
