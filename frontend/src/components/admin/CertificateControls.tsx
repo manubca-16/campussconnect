@@ -123,11 +123,11 @@ export default function CertificateControls({ event, onStatusChange }: Props) {
             <label className="flex-1 cursor-pointer px-4 py-2.5 rounded-xl border border-white/10 bg-black/20 hover:bg-black/30 transition-all flex items-center gap-2">
               <FileUp className="w-4 h-4 text-white/50" />
               <span className="text-xs font-bold text-white/70 truncate">
-                {selectedFileName || "Choose .png / .jpg"}
+                {selectedFileName || "Choose .png / .jpg / .pdf"}
               </span>
               <input
                 type="file"
-                accept=".png,.jpg,.jpeg"
+                accept=".png,.jpg,.jpeg,.pdf"
                 className="hidden"
                 onChange={(e) => setTemplateFile(e.target.files?.[0] || null)}
               />

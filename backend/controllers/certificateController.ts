@@ -70,7 +70,9 @@ export const generateCertificates = async (req: any, res: any) => {
       return res.status(400).json({ message: "Certificates have already been generated for this event. Use regenerate if needed." });
     }
 
-    const attendanceRecords = await Attendance.find({ eventId });
+    // Use the event's ObjectId for lookups to avoid any casting/format mismatches.
+    const eventObjectId = event._id;
+    const attendanceRecords = await Attendance.find({ eventId: eventObjectId });
     if (!attendanceRecords || attendanceRecords.length === 0) {
       return res.status(404).json({ message: "No attendance records found for this event" });
     }
@@ -84,14 +86,14 @@ export const generateCertificates = async (req: any, res: any) => {
 
     const baseUrl = process.env.BASE_URL || process.env.APP_URL || "http://localhost:3000";
 
-    let sequenceNumber = (await Certificate.countDocuments({ eventId })) + 1;
+    let sequenceNumber = (await Certificate.countDocuments({ eventId: eventObjectId })) + 1;
     let created = 0;
     let skipped = 0;
     let failed = 0;
 
     for (const attendance of attendanceRecords) {
       try {
-        const exists = await Certificate.findOne({ studentId: attendance.studentId, eventId });
+        const exists = await Certificate.findOne({ studentId: attendance.studentId, eventId: eventObjectId });
         if (exists) {
           skipped += 1;
           continue;
@@ -119,7 +121,7 @@ export const generateCertificates = async (req: any, res: any) => {
           studentId: attendance.studentId,
           studentName: attendance.studentName || "Student",
           email: attendance.email,
-          eventId: event._id,
+          eventId: eventObjectId,
           eventName: event.name || event.title || attendance.eventName || "Event",
           eventDate: parseEventDate(event.date),
           issuedAt: new Date(),
