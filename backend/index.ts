@@ -360,10 +360,10 @@ async function startServer() {
       }
     });
   } else {
-    const distPath = path.join(__dirname, "..", "frontend", "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+    // Split deploy: do not serve frontend assets from the backend.
+    // Keep backend strictly API-only in production (Render).
+    app.get("/", (_req, res) => {
+      res.type("text/plain").send("CampusConnect API Running");
     });
   }
 
