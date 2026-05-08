@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus, LayoutDashboard, Calendar, Users, IndianRupee, Settings, Trash2, Edit3, LogOut, ShieldAlert, Download, QrCode } from "lucide-react";
 import * as XLSX from "xlsx";
 import QRCodeModal from "../components/admin/QRCodeModal";
+import CertificateControls from "../components/admin/CertificateControls";
 import { apiFetch } from "../utils/api";
 
 export default function CollegeDashboard() {
@@ -332,7 +333,8 @@ export default function CollegeDashboard() {
                       events.map((event) => {
                         const isOwn = event.collegeId === user?.id || event.college === user?.name;
                         return (
-                          <tr key={event._id} className="hover:bg-white/5 transition-colors group">
+                          <React.Fragment key={event._id}>
+                          <tr className="hover:bg-white/5 transition-colors group">
                             <td className="px-8 py-6">
                               <div className="font-black text-lg group-hover:text-[#7C3AED] transition-colors flex items-center gap-3">
                                 {event.name}
@@ -364,6 +366,14 @@ export default function CollegeDashboard() {
                               </div>
                             </td>
                           </tr>
+                          {isOwn && (
+                            <tr className="bg-black/10">
+                              <td colSpan={4} className="px-8 pb-6">
+                                <CertificateControls event={event} onStatusChange={fetchData} />
+                              </td>
+                            </tr>
+                          )}
+                          </React.Fragment>
                         );
                       })
                     ) : (
