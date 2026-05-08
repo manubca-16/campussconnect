@@ -10,8 +10,7 @@ View your app in AI Studio: https://ai.studio/apps/c52ee80b-10f4-4fd2-969a-524c5
 
 ## Run Locally (Dev)
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies: `npm install`
 2. Configure backend env in `backend/.env` (see `backend/.env.example`)
@@ -28,13 +27,15 @@ The server runs on `http://localhost:3000` and serves both the API and the front
 ## Split Deploy: Vercel (Frontend) + Render (Backend)
 
 ### Render (backend)
-- Root dir: repo root
+- Root Directory: `backend`
 - Build command: `npm install`
 - Start command: `npm start`
 - Env vars:
-  - `MONGODB_URI`
+  - `MONGODB_URI` (or `MONGO_URI`)
   - `JWT_SECRET`
   - `BASE_URL=https://<your-vercel-domain>` (used for certificate QR verification links)
+  - `CORS_ORIGINS=https://<your-vercel-domain>` (comma-separated for multiple)
+  - `STRIPE_SECRET_KEY` (if using payments)
 
 ### Vercel (frontend)
 - Root dir: repo root
@@ -43,6 +44,5 @@ The server runs on `http://localhost:3000` and serves both the API and the front
 - Env vars:
   - `VITE_API_BASE_URL=https://<your-render-backend-domain>`
 
-If you instead set Render’s Root Directory to `backend/`, use:
-- Build command: `npm install`
-- Start command: `npm start` (uses `backend/package.json` → `node index.js`)
+`vercel.json` is included so client-side routes (React Router) work on refresh.
+
