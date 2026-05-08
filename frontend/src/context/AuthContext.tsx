@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { apiFetch } from "../utils/api";
+import { API_BASE_URL, apiFetch } from "../utils/api";
 
 interface User {
   id: string;
@@ -66,6 +66,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem("token", data.token);
       return data.user;
     } else {
+      if (
+        res.status === 405 &&
+        !API_BASE_URL &&
+        (res.headers.get("content-type") || "").includes("text/html")
+      ) {
+        throw new Error(
+          "Login failed because VITE_API_BASE_URL is not set, so the request hit the frontend host instead of the backend API. Set VITE_API_BASE_URL to your backend URL (e.g. your Render service) and redeploy."
+        );
+      }
+
       const message =
         data?.message ||
         (raw ? raw.slice(0, 200) : "") ||
@@ -82,6 +92,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     const { data, raw } = await readJsonSafely(res);
     if (!res.ok) {
+      if (
+        res.status === 405 &&
+        !API_BASE_URL &&
+        (res.headers.get("content-type") || "").includes("text/html")
+      ) {
+        throw new Error(
+          "Registration failed because VITE_API_BASE_URL is not set, so the request hit the frontend host instead of the backend API. Set VITE_API_BASE_URL to your backend URL (e.g. your Render service) and redeploy."
+        );
+      }
+
       const message =
         data?.message ||
         (raw ? raw.slice(0, 200) : "") ||
