@@ -1,5 +1,5 @@
-import { Event } from "../../frontend/src/models/Event.js";
-import { Attendance } from "../../frontend/src/models/Attendance.js";
+import { Event } from "../models/Event.js";
+import { Attendance } from "../models/Attendance.js";
 import { Certificate } from "../models/Certificate.js";
 import { generateCertificateId } from "../utils/certificateIdUtils.js";
 import { generateQRImageBuffer } from "../utils/qrGenerator.js";
@@ -98,7 +98,8 @@ export const generateCertificates = async (req: any, res: any) => {
         }
 
         const certificateId = generateCertificateId(eventId, sequenceNumber);
-        const verificationUrl = `${baseUrl.replace(/\\/$/, "")}/verify/${certificateId}`;
+        const cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+        const verificationUrl = `${cleanBaseUrl}/verify/${certificateId}`;
         const qrBuffer = await generateQRImageBuffer(verificationUrl);
 
         const { fileUrl, templateUsed } = await generateCertificatePDF(

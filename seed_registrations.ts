@@ -6,9 +6,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, 'backend/.env') });
 
-import { User } from './frontend/src/models/User.js';
-import { Event } from './frontend/src/models/Event.js';
-import { Registration } from './frontend/src/models/Registration.js';
+import { User } from "./backend/models/User.js";
+import { Event } from "./backend/models/Event.js";
+import { Registration } from "./backend/models/Registration.js";
 
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI!);

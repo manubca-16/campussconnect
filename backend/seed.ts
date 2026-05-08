@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { User } from "../frontend/src/models/User.js";
-import { College } from "../frontend/src/models/College.js";
-import { Event } from "../frontend/src/models/Event.js";
-import { Registration } from "../frontend/src/models/Registration.js";
+import { User } from "./models/User.js";
+import { College } from "./models/College.js";
+import { Event } from "./models/Event.js";
+import { Registration } from "./models/Registration.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

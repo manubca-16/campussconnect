@@ -13,10 +13,10 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { protect, authorize, generateToken } from "./middleware/auth.js";
-import { User } from "../frontend/src/models/User.js";
-import { College } from "../frontend/src/models/College.js";
-import { Event } from "../frontend/src/models/Event.js";
-import { Registration } from "../frontend/src/models/Registration.js";
+import { User } from "./models/User.js";
+import { College } from "./models/College.js";
+import { Event } from "./models/Event.js";
+import { Registration } from "./models/Registration.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
 import certificateRoutes from "./routes/certificateRoutes.js";
 
@@ -51,7 +51,19 @@ async function startServer() {
     process.exit(1);
   }
 
-  app.use(cors());
+  const corsOriginsRaw = process.env.CORS_ORIGIN || process.env.CORS_ORIGINS || "";
+  const corsOrigins = corsOriginsRaw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  app.use(
+    cors({
+      origin: corsOrigins.length ? corsOrigins : true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.use(cookieParser());

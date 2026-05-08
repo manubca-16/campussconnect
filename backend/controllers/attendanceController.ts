@@ -1,5 +1,5 @@
-import { Event } from '../../frontend/src/models/Event.js';
-import { Attendance } from '../../frontend/src/models/Attendance.js';
+import { Event } from "../models/Event.js";
+import { Attendance } from "../models/Attendance.js";
 import { generateQRPayload, verifyQRPayload } from '../utils/qrTokenUtils.js';
 import * as XLSX from 'xlsx';
 

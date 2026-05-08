@@ -6,10 +6,11 @@ const attendanceSchema = new mongoose.Schema({
   email: { type: String, required: true },
   eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true },
   eventName: { type: String, required: true },
-  markedAt: { type: Date, default: Date.now }
+  markedAt: { type: Date, default: Date.now },
 });
 
 // Enforce one-attendance-per-student-per-event
 attendanceSchema.index({ studentId: 1, eventId: 1 }, { unique: true });
 
 export const Attendance = mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);
+
